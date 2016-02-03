@@ -13,11 +13,19 @@ function Box(){
   };
 };
 
-function Board(){
-  this.board = [];                  // holds array of Box objects
-  //var $board = $('#board');         // gets HTML #board selector
+// function getAround(boxNum){
 
-  this.startGame = function(num){   // creates Box objects & appends to HTML board
+// };
+
+function Board(){
+  this.board;                   // holds array of Box objects
+  this.num;                     // stores game difficulty level (easy:5 med:10 hard:15)
+  // var $board = $('#board');     // gets HTML #board selector
+
+  // START A NEW GAME
+  this.startGame = function(num){   
+    this.board = [];                // new game = empty game board
+    this.num = num;                 // stores difficulty level value
     var mines = (num*num)/5;        // 20% of num*num are mines
 
     for(var i=0; i<(num*num); i++){
@@ -26,29 +34,32 @@ function Board(){
       
       // var $cell = $('<div class="boxes"></div>');   // creates a new <div> tag
       // $cell.attr('id', i+1);                        // <div class="boxes" id="#"></div>
+      // add click event listener here???   // use stopPropagation!
       // $board.append($cell);                         // adds to HTML $board 
     }
     
-    for(var a=0; a<mines; a++){                     // randomly places mines
+    for(var a=0; a<mines; a++){                         // randomly places mines
       var random = Math.floor(Math.random()*(num*num));
-      if (this.board[random].mine){                 // this.board[random] is already true   
-        random = Math.floor(Math.random()*(num*num)); }
-      this.board[random].isMine();                  // sets Box object mine = true
+      if (this.board[random].mine){                     // if object mine value is already true   -- use a while loop??
+        random = Math.floor(Math.random()*(num*num)); } // get another random number
+      this.board[random].isMine();                      // sets Box object mine = true
     }
   };
 
-  this.checkWin = function(){                       // checks if all boxes are shown (hidden: false)
+  // check if all boxes are shown (hidden: false)
+  this.checkWin = function(){                           
     var notMines = [];
     for(var i=0; i<this.board.length; i++){
-      if(this.board[i].mine === false){ notMines.push(this.board[i]); }      // array of NON-MINES
+      if(this.board[i].mine === false){ notMines.push(this.board[i]); }      // array of NON-MINES    -- DRY this
     }
 
     for(var x=0; x<notMines.length; x++){
-      if(notMines[x].hidden === true){ return false; }        // a box is STILL hidden
+      if(notMines[x].hidden === true){ return false; }        // a box is STILL hidden                -- DRY this
     } return true;                                            // all boxes are shown - YOU WIN!
   };
 
-  this.gameOver = function(){               // displays Game Over message
+  // displays Game Over message
+  this.gameOver = function(){                   // can i call this.checkWin() from here ????    
     // if checkWin() - true ---> player wins
     // else 'GAME OVER YOU LOSE!'
   };      
