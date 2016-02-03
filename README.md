@@ -1,60 +1,66 @@
 # click_click_BOOM
 
 
-#### `click_click_BOOM` works just like the classic game, Minesweeper. Depending on the level of difficulty of your choosing, you are given a finite amount of boxes where you must strategically determine and avoid randomly placed mines throughout the gameboard using given number indicators. 
+**click_click_BOOM** operates like the classical game: **Minesweeper.** Based on the level of difficulty of your choosing, you will be presented a minefield filled with empty boxes and explosive bombs! You must strategically & logically locate and avoid all the scattered explosives that are planted within the minefield using nothing but your **gut instincts** and provided number indicators. 
+
+The number indicators on the minefield will help guide and tell you how many mines are adjacent to the box. It may be located above, below, to the left, to the right or even diagonal!
+
+**For example:** `"1"` indicates that there is only 1 bomb adjacent to the box, whereas `"3"` indicates that there are 3 bombs adjacent to the box. 
+
+To win, you must dodge all the bombs until the entire minefield has been revealed. Otherwise, if you click on a bomb, you lose!
 
 ---
-  
+
 ### Levels of difficulties: 
--  Easy - 5 x 5 boxes
--  Medium - 10 x 10 boxes
--  Hard - 15 x 15 boxes
-
-
-##### The number indicators will tell you how many mines are adjacent to the box. (example: `1` indicates that there is only 1 mine adjacent to it, whereas `3` indicates that there are 3 mines adjacent to the box) To win, dodge all the mines until all the boxes are gone! Otherwise, `Game Over, You lose!`
+-  **Easy:** 5 x 5 boxes
+-  **Medium:** 10 x 10 boxes
+-  **Hard:** 15 x 15 boxes
 
 ---
 
-#### The Mine constructor:
+To create this game, you must have:
 
-###### The Mine constructor would have the following attributes:
--  `this.mine` -- holds boolean value indicating if current object is a mine or not **(default: false)**
--  `this.hidden` -- holds boolean value indicating if current object is hidden **(default: true)**
--  `this.val` -- holds a value of the current object (this will help you refer back to the index location of the object in the board array!)
+#### A Mine constructor:
+
+###### The constructor would have the following attributes:
+-  `this.bomb` -- holds a boolean value indicating if the current object is a bomb or not **(default: false)**
+-  `this.hidden` -- holds a boolean value indicating if the current object is hidden on the browser **(default: true)**
+-  `this.val` -- holds a value of the current object (this will help you refer back to the index location of the object in the board array!)  ** <------- do i need this ???**
 
 ###### And the following methods:
--  `this.show( )` -- sets `this.hidden` to `false`
+-  `this.show()` 
+    - sets `this.hidden` value to `false`
 -  `this.isMine()`
     - sets `this.mine` value to `true` 
-    - sets `this.value` to `"X"`
+    - sets `this.value` to `"X"` *(because "X" is the universal language for "bomb")*
 
 ---
 
-#### The Board constructor:
+#### A Board constructor:
 
-###### The Board constructor should have the following attributes:
--  `this.board = []` -- array that will store `Mine` objects
--  `this.total = 0` -- total number of boxes in the board 
+###### The constructor should have the following attributes:
+-  `this.board` -- empty array that will store the `Mine` objects
+-  `this.total` -- holds total number of boxes in the minefield 
 
 ###### And the following methods:
 -  `this.createBoard(num)`:
-    - accepts an argument (**easy:** `num = 5` **medium:** `num = 10` **hard:** `num = 15` )
+    - accepts a number argument ( Easy: 25; Medium: 100; Hard: 225 )
     - assigns `num` to `this.total`
-    - 20% of the `num` mines will be mines
+    - 20% of the `num` mines will be bombs
     - creates a mine field with the `num` of `Mine` objects
     - creates a `<div>` tag for each new object
 -  `this.checkBox(value)`:
-    - accepts `value` indicating current box location
-    - checks the board array's index `value` if box object is a mine
-        - returns `true` if `this.board[value].mine === true;` ( you lose )
-        - otherwise, `.show()` the box & return `false` ( you're safe to continue ) **<--- recursive??**
+    - accepts a `value` depicting the box location on the minefield
+    - checks the object's `.mine` property if it is a mine
+        - returns `true` if `this.board[value].mine === true;` ( you lose )  **<--- is there more stuff to add here ??**
+        - otherwise, call `.show()` & return `false` ( you're safe to continue ) **<--- is there more stuff to add here ??**
 - `this.checkAround(value)`:
-    - accepts `value` indicating current box location (from `<div> id`!)
-    - create an empty array `var surround = []` to store adjacent box values 
-    - computes & returns an array of all adjacent box values
-    - if an adjacent box value is less than or equal to zero **OR** more than the total number of boxes, push nothing
-        - if adjacent box value is between 0 && this.total, push it to the `surround` array 
-- `this.countMines(value)`: 
+    - accepts a `value` indicating the box location
+    - creates an empty array `var surround` to store all the adjacent boxes 
+    - computes & returns an array of the adjacent box values ** <----- left edge, right edge, around - in another function ?? (DRY)**
+    - if an adjacent box value is less than or equal to zero **OR** more than the total number of boxes, push nothing ** <---- correct this **
+        - if adjacent box value is between 0 && this.total, push it to the `surround` array ** <----- correct this **
+- `this.countMines(value)`: ** <----- correct this WHOLE METHOD **
     - accepts `value` indicating current box location
     - has a mine `counter` set to zero
     - calls `checkAround(value)` to get array of surrounding box values & stores it in `var point`
