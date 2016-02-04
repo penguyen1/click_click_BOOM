@@ -91,7 +91,7 @@ function Board(){
 
 // returns array of neighboring boxes of the input
 // apparently you can add this into Board() constructor! - remove level when you do!
-function checkAround(box, level){
+function checkAround(box, level, board){
   var result = [];              // determines location of box on the board
   var neighbors = [];           // array of neighboring boxes within 0-level^2
   var max = Math.pow(level,2); 
@@ -104,27 +104,27 @@ function checkAround(box, level){
     neighbors = [box-level-1, box-level, box-level+1, box-1, box+1, box+level-1, box+level, box+level+1];
   }
 
-  // does this work?
+  // original code REMIX
   for(var i=1; i<=neighbors.length; i++){
     var current = neighbors[i-1];
-    if(current>0 && current<=max && (board[current].check === false)){   // betw 0-max && check===false
+    if(current>0 && current<=max && !board[current].check){   // betw 0-max && check===false
       result.push(current);
     }
   } return result;
-
-  // // this is the original copy
+};
+// 
+  // this is the ORIGINAL code
   // for(var i=0; i<neighbors.length; i++){
   //   if(neighbors[i]>0 && neighbors[i]<=max){    // also check=false!
   //     result.push(neighbors[i]);
   //   }
   // } return result;
-};
 
 // returns total num of mines around box input
 // apparently you can add this into Board() constructor! - remove boardArray when you do!
 function countMines(box, boardArray){      
   var total_mines = 0;                      // total number of mines
-  var neighbors = checkAround(box, 4);      // 4 is for testing
+  var neighbors = checkAround(box, 4, boardArray);      // 4 is for testing
 
   for(var i=1; i<=neighbors.length; i++){
     var current = neighbors[i-1];
