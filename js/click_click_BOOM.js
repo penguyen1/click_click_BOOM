@@ -2,13 +2,11 @@ function Box(){
   this.hidden = true;       // box is not shown
   this.mine = false;        // box is not a mine
   this.check = false;       // box has not been checked yet
-  
   this.show = function(){   // shows the object
     this.hidden = false;
     this.check = true;
   };
-
-  this.isMine = function(){ // box is a mine!
+  this.isMine = function(){ // makes box a mine
     this.mine = true;       
   };
 };
@@ -97,8 +95,7 @@ function boxLocation(box, level){
   var result = [];              // determines location of box on the board
   var neighbors = [];           // array of neighboring boxes within 0-level^2
   var max = Math.pow(level,2); 
-  if(box<1 || box>max){ return null; }   // or return 0
-
+  //if(box<1 || box>max){ return null; }   // or return 0 -- is this necessary?
   if(box%level === 0){          // box is on right edge of game board
     neighbors = [box-level-1, box-level, box-1, box+level-1, box+level];
   } else if (box%level === 1){  // box is on left edge of game board
@@ -118,11 +115,9 @@ function boxLocation(box, level){
 function countMines(box, boardArray){      
   var total_mines = 0;                      // total number of mines
   var neighbors = boxLocation(box, 4);      // 4 is for testing
-  //var current = 0;
 
   for(var i=1; i<=neighbors.length; i++){
     var current = neighbors[i-1];
     if(boardArray[(current-1)].mine){ total_mines+= 1; }     // current box is a mine
-  }
-  return total_mines;
+  } return total_mines;
 };
