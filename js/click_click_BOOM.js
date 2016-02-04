@@ -13,10 +13,6 @@ function Box(){
   };
 };
 
-// function getAround(boxNum){
-
-// };
-
 function Board(){
   this.board;                   // holds array of Box objects
   this.num;                     // stores game difficulty level (easy:5 med:10 hard:15)
@@ -93,4 +89,51 @@ function Board(){
     // else 'GAME OVER YOU LOSE!'
   };      
 };
+
+// returns array of neighboring boxes of the current box(input)
+function boxLocation(box, level){
+  var result = [];              // determines location of box on the board
+  var neighbors = [];           // array of neighboring boxes within 0-level^2
+  var max = Math.pow(level,2); 
+
+  if(box<1 || box>max){ return null; }   // or return 0
+
+  if(box%level === 0){          // box is on right edge of game board
+    neighbors = [box-level-1, box-level, box-1, box+level-1, box+level];
+  } else if (box%level === 1){  // box is on left edge of game board
+    neighbors = [box-level, box-level+1, box+1, box+level, box+level+1];
+  } else {                      // box is somewhere inside the game board
+    neighbors = [box-level-1, box-level, box-level+1, box-1, box+1, box+level-1, box+level, box+level+1];
+  }
+
+  for(var i=0; i<neighbors.length; i++){
+    if(neighbors[i]>0 && neighbors[i]<max){
+      result.push(neighbors[i]);
+    }
+  }
+  return result;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
