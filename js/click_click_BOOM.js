@@ -32,10 +32,10 @@ function Board(){
       var box = new Box();          // creates a new Box object
       this.board.push(box);         // adds new Box object to board array
       
-      // var $cell = $('<div class="boxes"></div>');   // creates a new <div> tag
-      // $cell.attr('id', i+1);                        // <div class="boxes" id="#"></div>
+      var $cell = $('<div>');       // creates a new <div> tag
+      $cell.addClass('boxes').attr('id', i+1);                        // <div class="boxes" id="#"></div>
       // add click event listener here???   // use stopPropagation!
-      // $board.append($cell);                         // adds to HTML $board 
+      $board.append($cell);                         // adds to HTML $board 
     }
     
     for(var a=0; a<mines; a++){                         // randomly places mines
@@ -43,6 +43,35 @@ function Board(){
       if (this.board[random].mine){                     // if object mine value is already true   -- use a while loop??
         random = Math.floor(Math.random()*(num*num)); } // get another random number
       this.board[random].isMine();                      // sets Box object mine = true
+    }
+  };
+
+  // checks current box -> calls neighbors of neighboring boxes
+  this.checkBox = function(boxNum, depth){
+    if(depth === 0){
+      this.board[boxNum].show();                    // shows box object
+      if(this.board[boxNum].mine === true){         // its a mine!
+        // GAME OVER YOU LOSE !!! 
+      } else {                                      // not a mine
+        var neighbors = checkAround(boxNum);        // gets array of neighbors
+        for(var i=0; i<neighbors.length; i++){
+          checkBox(neighbors[i], 1);                // checks boxNum of depth 1
+        }   // ^^^ return statement ????
+      }         
+    } 
+
+    if(depth === 1){
+      var neighbors2 = checkAround(boxNum);         // gets 2nd layer array of neighbors 
+      var numOfMines = countMines(neighbors2);      // # of mines in 2nd layer array
+      var $div = $('#'+(boxNum-1));                    // get <div> tag with id=(boxNum-1)
+
+      if(numOfMines > 0){
+        this.board[boxNum].show();                  // show the box (hidden: false & check: true)
+        $div.text(numOfMines);                      // adds numOfMines count to <div> tag
+      } else {    // numOfMines = 0
+        this.board[boxNum].show();
+        $div.text('');                              // displays blank
+      }
     }
   };
 
@@ -64,3 +93,4 @@ function Board(){
     // else 'GAME OVER YOU LOSE!'
   };      
 };
+
