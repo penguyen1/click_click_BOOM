@@ -43,29 +43,30 @@ function Board(){
   };
 
   // checks current box -> calls neighbors of neighboring boxes
-  this.checkBox = function(boxNum, depth){
+  this.checkBox = function(box, depth){
+    // box.check = true;
     if(depth === 0){
-      this.board[boxNum].show();                    // shows box object
-      if(this.board[boxNum].mine === true){         // its a mine!
+      this.board[box].show();                    // shows box object
+      if(this.board[box].mine === true){         // its a mine!
         // GAME OVER YOU LOSE !!! 
       } else {                                      // not a mine
-        var neighbors = checkAround(boxNum);        // gets array of neighbors
+        var neighbors = checkAround(box);        // gets array of neighbors
         for(var i=0; i<neighbors.length; i++){
-          checkBox(neighbors[i], 1);                // checks boxNum of depth 1
+          checkBox(neighbors[i], 1);                // checks box of depth 1
         }   // ^^^ return statement ????
       }         
     } 
 
     if(depth === 1){
-      var neighbors2 = checkAround(boxNum);         // gets 2nd layer array of neighbors 
+      var neighbors2 = checkAround(box);         // gets 2nd layer array of neighbors 
       var numOfMines = countMines(neighbors2);      // # of mines in 2nd layer array
-      var $div = $('#'+(boxNum-1));                    // get <div> tag with id=(boxNum-1)
+      var $div = $('#'+(box-1));                    // get <div> tag with id=(box-1)
 
       if(numOfMines > 0){
-        this.board[boxNum].show();                  // show the box (hidden: false & check: true)
+        this.board[box].show();                  // show the box (hidden: false & check: true)
         $div.text(numOfMines);                      // adds numOfMines count to <div> tag
       } else {    // numOfMines = 0
-        this.board[boxNum].show();
+        this.board[box].show();
         $div.text('');                              // displays blank
       }
     }
@@ -90,7 +91,8 @@ function Board(){
   };      
 };
 
-// returns array of neighboring boxes of the current box(input)
+// returns array of neighboring boxes of the input
+// apparently you can add this into Board() constructor!
 function boxLocation(box, level){
   var result = [];              // determines location of box on the board
   var neighbors = [];           // array of neighboring boxes within 0-level^2
@@ -106,49 +108,21 @@ function boxLocation(box, level){
   }
 
   for(var i=0; i<neighbors.length; i++){
-    if(neighbors[i]>0 && neighbors[i]<max){
+    if(neighbors[i]>0 && neighbors[i]<=max){
       result.push(neighbors[i]);
     }
   } return result;
 };
 
-// returns the total number of mines present in the array of neighbor boxes 
-function countMines(neighborsArray, boardArray){
-  var total_mines = 0;          // total number of mines
-  for(var i=0; i<neighborsArray.length; i++){
-    if(boardArray[neighborsArray[i]].check === false){      // current box hasn't been checked yet
-      if(boardArray[neighborsArray[i]].mine === true){      // current box is a mine
-        boardArray[neighborsArray[i]].check = true;         // current box has now been checked
-        total_mines++;
-      } else {
-        boardArray[neighborsArray[i]].check = true;
-      }
-      // if(boardArray[neighborsArray[i]].mine === true){ total_mines++; }     // current box is a mine
-      // boardArray[neighborsArray[i]].check = true;    
-    }
+// returns total num of mines around box input
+function countMines(box, boardArray){      
+  var total_mines = 0;                      // total number of mines
+  var neighbors = boxLocation(box, 4);      // 4 is for testing
+  //var current = 0;
+
+  for(var i=1; i<=neighbors.length; i++){
+    var current = neighbors[i-1];
+    if(boardArray[(current-1)].mine){ total_mines+= 1; }     // current box is a mine
   }
   return total_mines;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
