@@ -28,10 +28,10 @@ function Board(){
       var box = new Box();          // creates a new Box object
       this.board.push(box);         // adds new Box object to board array
       
-      var $cell = $('<div>');       // creates a new <div> tag
-      $cell.addClass('boxes').attr('id', i+1);                        // <div class="boxes" id="#"></div>
-      // add click event listener here???   // use stopPropagation!
-      $board.append($cell);                         // adds to HTML $board 
+      // var $cell = $('<div>');       // creates a new <div> tag
+      // $cell.addClass('boxes').attr('id', i+1);                        // <div class="boxes" id="#"></div>
+      // // add click event listener here???   // use stopPropagation!
+      // $board.append($cell);                         // adds to HTML $board 
     }
     
     for(var a=0; a<mines; a++){                         // randomly places mines
@@ -95,7 +95,6 @@ function boxLocation(box, level){
   var result = [];              // determines location of box on the board
   var neighbors = [];           // array of neighboring boxes within 0-level^2
   var max = Math.pow(level,2); 
-
   if(box<1 || box>max){ return null; }   // or return 0
 
   if(box%level === 0){          // box is on right edge of game board
@@ -110,10 +109,26 @@ function boxLocation(box, level){
     if(neighbors[i]>0 && neighbors[i]<max){
       result.push(neighbors[i]);
     }
-  }
-  return result;
+  } return result;
 };
 
+// returns the total number of mines present in the array of neighbor boxes 
+function countMines(neighborsArray, boardArray){
+  var total_mines = 0;          // total number of mines
+  for(var i=0; i<neighborsArray.length; i++){
+    if(boardArray[neighborsArray[i]].check === false){      // current box hasn't been checked yet
+      if(boardArray[neighborsArray[i]].mine === true){      // current box is a mine
+        boardArray[neighborsArray[i]].check = true;         // current box has now been checked
+        total_mines++;
+      } else {
+        boardArray[neighborsArray[i]].check = true;
+      }
+      // if(boardArray[neighborsArray[i]].mine === true){ total_mines++; }     // current box is a mine
+      // boardArray[neighborsArray[i]].check = true;    
+    }
+  }
+  return total_mines;
+}
 
 
 
