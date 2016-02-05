@@ -56,6 +56,9 @@ p {
   margin: 0; 
 }
 
+.mine { background-color: red; }
+.shown { background-color: gray; }
+
 .box:hover, .game-level:hover {
   background-color: purple;
   opacity: .7;

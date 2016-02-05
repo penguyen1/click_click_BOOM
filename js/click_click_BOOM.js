@@ -12,7 +12,7 @@ function Box(){
 function Board(){
   this.board;               // holds array of Box objects
   this.level;               // stores game board dimension (easy:5 med:10 hard:15)
-  var $cell;//whats this for??
+  var $cell;
   var that = this;          // stores the 'this' into context!!
 
   // START A NEW GAME
@@ -27,14 +27,7 @@ function Board(){
       this.board.push(box);                     // adds new Box object to board array
       
       $cell = $('<div>');                   // creates a new <div> tag
-      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text(i+1);    // <div class="boxes" id="i+1">
-      $cell.on('click',function(event){
-        $boxNum = parseInt($(event.target).attr('id'));
-        console.log('\nYou clicked Box '+$boxNum);
-        //that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
-        // that.checkAround($boxNum);            // testing checkAround  --- WORKS 12:30pm today
-        that.countMines($boxNum);             // testing countMines
-      });
+      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text('');    // <div class="boxes" id="i+1">
       $board.append($cell);                     // adds to HTML $board 
     }
     
@@ -44,42 +37,47 @@ function Board(){
       } while (this.board[random].mine);
       console.log('random: '+random);
       this.board[random].isMine();          // Box object is now a mine
+      $('#'+(random+1)).addClass('mine');   // addClass('mine'); to all mine boxes
     }
-    // console.log('the board: '+this.board[19].check);
   };
 
-  // checks & displays current box and its neighboring boxes ( RECURSION )
-  this.checkBox = function(box, depth){           // box is called from clicked <div> id (dont forget to -1!)
-    var numOfMines, neighbors;
-    //console.log('Checking box '+box+' at depth '+depth);        // testing
-
-    if(depth === 0){
-      this.board[box-1].show();                    
-      // is this a mine ??
-      if(this.board[box-1].mine === true){        // ITS A MINE! - call this.gameOver()
-        that.gameOver();                          // GAME OVER YOU LOSE !!! 
-      } else {                                   
-        numOfMines = that.countMines(box);             // gets # of mines around box(input)                                                // how do i call this?
-        neighbors = that.checkAround(box);             // gets array of neighboring boxes                                                       // how do i call this?
-    console.log('WHAT IS THE CELL? '+$cell);
-      // jQuery current object
-        console.log($cell.eq(box-1));
-        $board[box-1].text(numOfMines);                // adds to <div> to be seen on webpage
-        for(var i=0; i<neighbors.length; i++){
-          that.checkBox(neighbors[i], 1);              // calls itself with new box value (RECURSION!!)
-        }   
-      }         
-    } 
-    if(depth === 1){                              
-      if(this.board[box-1].mine === true){          // is this a mine ??
-        this.board[box-1].check = true;
-      } else {
-        numOfMines = that.countMines(box);             // gets # of mines around box(input)
-        this.board[box-1].show();
-        $board[box-1].text(numOfMines);                // adds to <div> to be seen on webpage
-      } 
-      return;
+  // waits for a click action and continues game
+  this.play = function(event){
+    console.log('hi');
+    var $div = $('.box');
+    for(var i=0; i<$div.length; i++){
+      $div.eq(i).on('click',function(event){
+        $boxNum = parseInt($(event.target).attr('id'));
+        // console.log('\nYou clicked Box '+$boxNum);
+        // that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
+      });
     }
+  };
+
+  // checks + displays box & its neighboring boxes ( RECURSION )
+  this.checkBox = function(box, depth){           
+    var numOfMines = that.countMines(box);                      // gets # of mines around box input 
+    var neighbors = that.checkAround(box);                      // gets array of neighboring boxes 
+    
+    console.log('Checking box '+box+' at depth '+depth);        // testing --- WORKS @2:20pm today
+    console.log('Box'+box+' has '+numOfMines+' mines nearby');
+    console.log('Neighbors of Box'+box+': '+neighbors); 
+
+    // first, is this a mine ??
+    if(depth<1 && this.board[box-1].mine) { that.gameOver(); } // first click & its a mine - GAME OVER
+    if(depth>0 && this.board[box-1].mine) {                    // box is a neighbor & a mine - check but do not show
+      this.board[box-1].check = true;
+      return;
+    } 
+    
+    // ok, its NOT a mine. now what?
+    this.board[box-1].show();                             // display it
+    $('#'+(box)).addClass('shown').text(numOfMines);      // add class 'shown' & display mine count
+    if(depth<1){
+      for(var i=0; i<neighbors.length; i++){
+        that.checkBox(neighbors[i], 1);                   // call itself with neighbor box (RECURSION!!)
+      } 
+    }   return;
   };
 
   // returns array of neighboring boxes of the input
@@ -95,59 +93,55 @@ function Board(){
     } else {                              // box is somewhere inside the game board
       neighborBox = [box-this.level-1, box-this.level, box-this.level+1, box-1, box+1, parseInt(box)+parseInt(this.level)-1, parseInt(box)+parseInt(this.level), parseInt(box)+parseInt(this.level)+1];
     }
-    // console.log('All neighbors: '+neighborBox);
 
     // filters neighborBox
-    for(var i=0; i<neighborBox.length; i++){                         // i represents each box # starting at 1
-      var current = neighborBox[i];                                 // value of neighborBox[0]
-      // console.log('checked?: '+this.board[current].check);
-      if(current>0 && current<=max && !(this.board[current - 1].check)){    // ONLY IF num is between 0-max && check===false
-        neighbors.push(current);
-      }
-    } 
-
-    console.log('Neighbors of Box'+box+': '+neighbors);
-    return neighbors;
+    for(var i=0; i<neighborBox.length; i++){
+      var current = neighborBox[i];          
+      // && !this.board[current-1].check -removed bc it skips checked mine boxes & ruins mine count
+      if(current>0 && current<=max){  neighbors.push(current);  }
+    } return neighbors;
   };
 
   // returns total num of mines around box(input)
   this.countMines = function(box){      
-    var total_mines = 0;                     // total number of mines
-    var neighbors = this.checkAround(box);   // get neighboring boxes
+    var total_mines = 0;                      // total number of mines
+    var neighbors = this.checkAround(box);    // get neighboring boxes
 
-    for(var i=1; i<=neighbors.length; i++){
-      var current = neighbors[i-1];                           // neighbors[0]
-      if(this.board[(current-1)].mine){ total_mines+= 1; }    // this box is a mine
-    } 
-
-    console.log('There\s '+total_mines+' mines at Box'+box);
-
-    return total_mines;
+    // checks each neighbor box for a mine
+    for(var i=0; i<neighbors.length; i++){   
+      var current = neighbors[i];
+      // debugger;
+      if(this.board[current-1].mine){ total_mines+= 1; }    // Its a mine!
+    } return total_mines;
   };
 
   // check if all boxes are shown (default hidden: false)
-  this.checkWin = function(){                           
-    var notMines = [];
-    for(var i=0; i<this.board.length; i++){
-      if(this.board[i].mine === false){ notMines.push(this.board[i]); }      // array of NON-MINES    -- DRY this
-    }
+  this.checkWin = function(){                                   // how would this work with 2 players?               
+    // var notMines = [];
 
-    for(var x=0; x<notMines.length; x++){
-      if(notMines[x].hidden === true){ return false; }        // a box is STILL hidden                -- DRY this
-    } return true;                                            // all boxes are shown - YOU WIN!
+    // // array of NON-MINES 
+    // for(var i=0; i<this.board.length; i++){                                   // DRY THIS!
+    //   if(this.board[i].mine === false){ notMines.push(this.board[i]); }
+    // }
+    // determines if player Won 
+    for(var x=0; x<this.board.length; x++){
+      if(this.board[x].check === false){ return false; }        // LOSE: if any box is STILL hidden              -- DRY this
+    } 
+    return true;                                            // WIN: ALL non-mines are not hidden
   };
 
   // displays Game Over message
   this.gameOver = function(){
-    alert(this.checkWin() ? 'Great Game! You Win!' : 'GAME OVER! YOU LOSE!'); 
+    alert(that.checkWin() ? 'Great Game! You Win!' : 'GAME OVER! YOU LOSE!'); 
+    // display all mine boxes with an img
+    // how do you kill this game ???
   };      
 };
 
 $(document).ready(function(){
     console.log('lock and loaded');
-    var $cell;//do i need this here???
-    var $level, $players, $boxNum, $box;              // $level=game-level $players=2players 
-                                                      // $boxNum=clicked div id#
+    var $level, $players, $boxNum;              // $level=game-level $players=2players  $boxNum=clicked div id#
+
     $('.game-level').click(function(event){
       $level = $(event.target).attr('id');      // grabs id of easy|medium|hard
       //console.log('this game will be: ' + $level);
@@ -157,13 +151,35 @@ $(document).ready(function(){
       $('.container').append($('<div id="board">'));     // add new gameBoard to HTML
       var ccb = new Board();
       ccb.startGame($level);
+      ccb.play();
 
-
-      //console.log('Here\'s all the div boxes: '+ccb.board.length);
-      // do{
-      //   ccb.checkBox(,0);
-      // } while(!ccb.checkWin());
+      // while(!ccb.checkWin()){
+      //   ccb.play();
+      // }
+      // console.log('ok, game ends here.');
       // ccb.gameOver();
     });  
-  });
+
+
+    // var $box = $('.box'); 
+    // $box.each(function(i){
+    //   $box.eq(i).on('click', function() {
+    //     console.log('clicking');
+    //   })
+    // });
+    
+
+
+    // $('.box').each(function(i){
+    //   var $box = $('.box').eq(i);
+    //   $box.on('click', function(event){
+    //     console.log('test');
+    //     // $boxNum = parseInt($(event.target).attr('id'));
+    //     // console.log('\nYou clicked Box '+$boxNum);
+    //   });
+    // });
+
+});
+    
+
 
