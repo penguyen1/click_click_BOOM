@@ -13,6 +13,7 @@ function Board(){
   this.board;               // holds array of Box objects
   this.level;               // stores game board dimension (easy:5 med:10 hard:15)
   var $board = $('#board');
+  var that = this;          // stores the 'this' in the context!!
 
   // START A NEW GAME
   this.startGame = function(level){   
@@ -30,7 +31,7 @@ function Board(){
       $cell.on('click',function(event){
         $boxNum = parseInt($(event.target).attr('id'));
         console.log('You clicked Box '+$boxNum + '. It is a: ' +typeof($boxNum));
-        this.checkBox($boxNum,0);           // ERRRRORRRRRR 
+        that.checkBox($boxNum,0);           // ERRRRORRRRRR 
         //console.log(this);
       });
       $board.append($cell);                     // adds to HTML $board 
