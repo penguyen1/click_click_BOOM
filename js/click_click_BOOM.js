@@ -29,8 +29,8 @@ function Board(){
       $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size});    // <div class="boxes" id="i+1">
       $cell.click(function(event){
         $boxNum = parseInt($(event.target).attr('id'));
-        console.log('You clicked Box #'+$boxNum);
-        console.log('This is a: '+typeof($boxNum));
+        console.log('You clicked Box #'+$boxNum + '. It is a: ' +typeof($boxNum));
+        
       });
       $board.append($cell);                     // adds to HTML $board 
     }
@@ -93,13 +93,6 @@ function Board(){
         neighbors.push(current);
       }
     } return neighbors;
-
-    // this is the ORIGINAL code
-    // for(var i=0; i<neighborBox.length; i++){
-    //   if(neighborBox[i]>0 && neighborBox[i]<=max){    // also check=false!
-    //     neighbors.push(neighborBox[i]);
-    //   }
-    // } return neighbors;
   };
 
   // returns total num of mines around box(input)
