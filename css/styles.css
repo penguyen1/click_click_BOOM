@@ -1,5 +1,5 @@
 .container {
-  margin: 0 auto;
+  margin: 3em auto;
 }
 
 h1 {
@@ -19,6 +19,10 @@ p {
   list-style: none;
   font-size: 1.3em; 
   margin: 0;  padding: 0.35em 0;
+}
+
+#instructions {
+  margin: 4em 44em;
 }
 
 #rules {
@@ -50,4 +54,9 @@ p {
   display: inline-block;
   border: .12em solid black;
   margin: 0; 
+}
+
+.box:hover, .game-level:hover {
+  background-color: purple;
+  opacity: .7;
 }
