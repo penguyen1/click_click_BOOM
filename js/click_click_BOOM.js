@@ -12,8 +12,8 @@ function Box(){
 function Board(){
   this.board;               // holds array of Box objects
   this.level;               // stores game board dimension (easy:5 med:10 hard:15)
-  var $cell;
-  var that = this;          // stores the 'this' in the context!!
+  var $cell;//whats this for??
+  var that = this;          // stores the 'this' into context!!
 
   // START A NEW GAME
   this.startGame = function(level){   
@@ -30,18 +30,19 @@ function Board(){
       $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text(i+1);    // <div class="boxes" id="i+1">
       $cell.on('click',function(event){
         $boxNum = parseInt($(event.target).attr('id'));
-        console.log('You clicked Box '+$boxNum);
+        console.log('\nYou clicked Box '+$boxNum);
         //that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
-        that.checkAround($boxNum);            // testing checkAround
-        // that.countMines($boxNum);             // testing countMines
+        // that.checkAround($boxNum);            // testing checkAround  --- WORKS 12:30pm today
+        that.countMines($boxNum);             // testing countMines
       });
       $board.append($cell);                     // adds to HTML $board 
     }
     
     for(var a=0; a<mines; a++){             // randomly places mines
       do{                                   // ensures no repetitive random numbers
-        var random = Math.floor(Math.random()*Math.pow(level,2)); 
+        var random = Math.floor(Math.random()*Math.pow(level,2));     // 0-24
       } while (this.board[random].mine);
+      console.log('random: '+random);
       this.board[random].isMine();          // Box object is now a mine
     }
     // console.log('the board: '+this.board[19].check);
@@ -94,7 +95,7 @@ function Board(){
     } else {                              // box is somewhere inside the game board
       neighborBox = [box-this.level-1, box-this.level, box-this.level+1, box-1, box+1, parseInt(box)+parseInt(this.level)-1, parseInt(box)+parseInt(this.level), parseInt(box)+parseInt(this.level)+1];
     }
-    console.log('All neighbors: '+neighborBox);
+    // console.log('All neighbors: '+neighborBox);
 
     // filters neighborBox
     for(var i=0; i<neighborBox.length; i++){                         // i represents each box # starting at 1
@@ -105,21 +106,21 @@ function Board(){
       }
     } 
 
-    console.log('Neighbors of box '+box+': '+neighbors);
+    console.log('Neighbors of Box'+box+': '+neighbors);
     return neighbors;
   };
 
   // returns total num of mines around box(input)
   this.countMines = function(box){      
-    var total_mines = 0;                                      // total number of mines
-    var neighbors = this.checkAround(box);  
+    var total_mines = 0;                     // total number of mines
+    var neighbors = this.checkAround(box);   // get neighboring boxes
 
     for(var i=1; i<=neighbors.length; i++){
       var current = neighbors[i-1];                           // neighbors[0]
       if(this.board[(current-1)].mine){ total_mines+= 1; }    // this box is a mine
     } 
 
-    console.log('There\s '+total_mines+' mines at box '+box);
+    console.log('There\s '+total_mines+' mines at Box'+box);
 
     return total_mines;
   };
@@ -144,7 +145,7 @@ function Board(){
 
 $(document).ready(function(){
     console.log('lock and loaded');
-    var $cell;
+    var $cell;//do i need this here???
     var $level, $players, $boxNum, $box;              // $level=game-level $players=2players 
                                                       // $boxNum=clicked div id#
     $('.game-level').click(function(event){
