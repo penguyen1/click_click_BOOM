@@ -27,10 +27,11 @@ function Board(){
       
       var $cell = $('<div>');                   // creates a new <div> tag
       $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size});    // <div class="boxes" id="i+1">
-      $cell.click(function(event){
+      $cell.on('click',function(event){
         $boxNum = parseInt($(event.target).attr('id'));
         console.log('You clicked Box '+$boxNum + '. It is a: ' +typeof($boxNum));
-        this.checkBox($boxNum,0);
+        this.checkBox($boxNum,0);           // ERRRRORRRRRR 
+        //console.log(this);
       });
       $board.append($cell);                     // adds to HTML $board 
     }
@@ -45,34 +46,33 @@ function Board(){
 
   // checks & displays current box and its neighboring boxes ( RECURSION )
   this.checkBox = function(box, depth){           // box is called from clicked <div> id (dont forget to -1!)
-    // var numOfMines, neighbors;
+    var numOfMines, neighbors;
+    //console.log('Checking box '+box+' at depth '+depth);        // testing
 
-    console.log('Checking box '+box+' at depth '+depth);
-
-    // if(depth === 0){
-    //   this.board[box-1].show();                    
-    //   // is this a mine ??
-    //   if(this.board[box-1].mine === true){        // ITS A MINE! - call this.gameOver()
-    //     this.gameOver();                          // GAME OVER YOU LOSE !!! 
-    //   } else {                                   
-    //     numOfMines = countMines(box);             // gets # of mines around box(input)                                                // how do i call this?
-    //     neighbors = checkAround(box);             // gets array of neighboring boxes                                                       // how do i call this?
-    //     $current.text(numOfMines);                // adds to <div> to be seen on webpage
-    //     for(var i=0; i<neighbors.length; i++){
-    //       checkBox(neighbors[i], 1);              // calls itself with new box value (RECURSION!!)
-    //     }   
-    //   }         
-    // } 
-    // if(depth === 1){                              
-    //   if(this.board[box-1].mine === true){          // is this a mine ??
-    //     this.board[box-1].check = true;
-    //   } else {
-    //     numOfMines = countMines(box);             // gets # of mines around box(input)
-    //     this.board[box-1].show();
-    //     $current.text(numOfMines);                // adds to <div> to be seen on webpage
-    //   } 
-    //   return;
-    // }
+    if(depth === 0){
+      this.board[box-1].show();                    
+      // is this a mine ??
+      if(this.board[box-1].mine === true){        // ITS A MINE! - call this.gameOver()
+        this.gameOver();                          // GAME OVER YOU LOSE !!! 
+      } else {                                   
+        numOfMines = countMines(box);             // gets # of mines around box(input)                                                // how do i call this?
+        neighbors = checkAround(box);             // gets array of neighboring boxes                                                       // how do i call this?
+        $current.text(numOfMines);                // adds to <div> to be seen on webpage
+        for(var i=0; i<neighbors.length; i++){
+          checkBox(neighbors[i], 1);              // calls itself with new box value (RECURSION!!)
+        }   
+      }         
+    } 
+    if(depth === 1){                              
+      if(this.board[box-1].mine === true){          // is this a mine ??
+        this.board[box-1].check = true;
+      } else {
+        numOfMines = countMines(box);             // gets # of mines around box(input)
+        this.board[box-1].show();
+        $current.text(numOfMines);                // adds to <div> to be seen on webpage
+      } 
+      return;
+    }
   };
 
   // returns array of neighboring boxes of the input
@@ -137,6 +137,7 @@ function Board(){
 
 $(document).ready(function(){
     console.log('lock and loaded');
+    var $cell;
     var $level, $players, $boxNum, $box;              // $level=game-level $players=2players 
                                                       // $boxNum=clicked div id#
     $('.game-level').click(function(event){
