@@ -12,7 +12,7 @@ function Box(){
 function Board(){
   this.board;               // holds array of Box objects
   this.level;               // stores game board dimension (easy:5 med:10 hard:15)
-  var $board = $('#board');
+  var $cell;
   var that = this;          // stores the 'this' in the context!!
 
   // START A NEW GAME
@@ -21,18 +21,19 @@ function Board(){
     this.level = level;                         // stores game dimension value
     var mines = (Math.pow(level,2))/5;          // 20% of total area of boxes
     var size = ((30/level)-.125)+"em";
-
+    $board = $('#board');
     for(var i=0; i<Math.pow(level,2); i++){
       var box = new Box();                      // creates a new Box object
       this.board.push(box);                     // adds new Box object to board array
       
-      var $cell = $('<div>');                   // creates a new <div> tag
-      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size});    // <div class="boxes" id="i+1">
+      $cell = $('<div>');                   // creates a new <div> tag
+      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text(i+1);    // <div class="boxes" id="i+1">
       $cell.on('click',function(event){
         $boxNum = parseInt($(event.target).attr('id'));
-        console.log('You clicked Box '+$boxNum + '. It is a: ' +typeof($boxNum));
-        that.checkBox($boxNum,0);           // ERRRRORRRRRR 
-        //console.log(this);
+        console.log('You clicked Box '+$boxNum);
+        //that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
+        that.checkAround($boxNum);            // testing checkAround
+        // that.countMines($boxNum);             // testing countMines
       });
       $board.append($cell);                     // adds to HTML $board 
     }
@@ -43,6 +44,7 @@ function Board(){
       } while (this.board[random].mine);
       this.board[random].isMine();          // Box object is now a mine
     }
+    // console.log('the board: '+this.board[19].check);
   };
 
   // checks & displays current box and its neighboring boxes ( RECURSION )
@@ -54,13 +56,16 @@ function Board(){
       this.board[box-1].show();                    
       // is this a mine ??
       if(this.board[box-1].mine === true){        // ITS A MINE! - call this.gameOver()
-        this.gameOver();                          // GAME OVER YOU LOSE !!! 
+        that.gameOver();                          // GAME OVER YOU LOSE !!! 
       } else {                                   
-        numOfMines = countMines(box);             // gets # of mines around box(input)                                                // how do i call this?
-        neighbors = checkAround(box);             // gets array of neighboring boxes                                                       // how do i call this?
-        $current.text(numOfMines);                // adds to <div> to be seen on webpage
+        numOfMines = that.countMines(box);             // gets # of mines around box(input)                                                // how do i call this?
+        neighbors = that.checkAround(box);             // gets array of neighboring boxes                                                       // how do i call this?
+    console.log('WHAT IS THE CELL? '+$cell);
+      // jQuery current object
+        console.log($cell.eq(box-1));
+        $board[box-1].text(numOfMines);                // adds to <div> to be seen on webpage
         for(var i=0; i<neighbors.length; i++){
-          checkBox(neighbors[i], 1);              // calls itself with new box value (RECURSION!!)
+          that.checkBox(neighbors[i], 1);              // calls itself with new box value (RECURSION!!)
         }   
       }         
     } 
@@ -68,9 +73,9 @@ function Board(){
       if(this.board[box-1].mine === true){          // is this a mine ??
         this.board[box-1].check = true;
       } else {
-        numOfMines = countMines(box);             // gets # of mines around box(input)
+        numOfMines = that.countMines(box);             // gets # of mines around box(input)
         this.board[box-1].show();
-        $current.text(numOfMines);                // adds to <div> to be seen on webpage
+        $board[box-1].text(numOfMines);                // adds to <div> to be seen on webpage
       } 
       return;
     }
@@ -83,23 +88,24 @@ function Board(){
     var max = Math.pow(this.level,2); 
 
     if(box%this.level === 0){             // box is on right edge of game board
-      neighborBox = [box-this.level-1, box-this.level, box-1, box+this.level-1, box+this.level];
+      neighborBox = [box-this.level-1, box-this.level, box-1, parseInt(box)+parseInt(this.level)-1, parseInt(box)+parseInt(this.level)];
     } else if (box%this.level === 1){     // box is on left edge of game board
-      neighborBox = [box-this.level, box-this.level+1, box+1, box+this.level, box+this.level+1];
+      neighborBox = [box-this.level, box-this.level+1, box+1, parseInt(box)+parseInt(this.level), parseInt(box)+parseInt(this.level)+1];
     } else {                              // box is somewhere inside the game board
-      neighborBox = [box-this.level-1, box-this.level, box-this.level+1, box-1, box+1, box+this.level-1, box+this.level, box+this.level+1];
+      neighborBox = [box-this.level-1, box-this.level, box-this.level+1, box-1, box+1, parseInt(box)+parseInt(this.level)-1, parseInt(box)+parseInt(this.level), parseInt(box)+parseInt(this.level)+1];
     }
+    console.log('All neighbors: '+neighborBox);
 
-    // original code REMIX
-    for(var i=1; i<=neighborBox.length; i++){                         // i represents each box # starting at 1
-      var current = neighborBox[i-1];                                 // neighborBox[0]
-      if(current>0 && current<=max && !this.board[current].check){    // ONLY IF num is between 0-max && check===false
+    // filters neighborBox
+    for(var i=0; i<neighborBox.length; i++){                         // i represents each box # starting at 1
+      var current = neighborBox[i];                                 // value of neighborBox[0]
+      // console.log('checked?: '+this.board[current].check);
+      if(current>0 && current<=max && !(this.board[current - 1].check)){    // ONLY IF num is between 0-max && check===false
         neighbors.push(current);
       }
     } 
 
     console.log('Neighbors of box '+box+': '+neighbors);
-
     return neighbors;
   };
 
@@ -143,7 +149,7 @@ $(document).ready(function(){
                                                       // $boxNum=clicked div id#
     $('.game-level').click(function(event){
       $level = $(event.target).attr('id');      // grabs id of easy|medium|hard
-      console.log('this game will be: ' + $level);
+      //console.log('this game will be: ' + $level);
       
       $('#levels').remove();                  // removes buttons
       $('#instructions').remove();            // removes instructions
@@ -152,7 +158,7 @@ $(document).ready(function(){
       ccb.startGame($level);
 
 
-      console.log('Here\'s all the div boxes: '+ccb.board.length);
+      //console.log('Here\'s all the div boxes: '+ccb.board.length);
       // do{
       //   ccb.checkBox(,0);
       // } while(!ccb.checkWin());
