@@ -1,0 +1,65 @@
+.container {
+  margin: 3em auto;
+}
+
+h1 {
+  font-size: 2em;
+  text-align: center;
+  margin: 0;
+}
+
+span {
+  color: red;
+  font-size: 3em;
+}
+
+p {
+  text-align: center;
+  background-color: green;
+  list-style: none;
+  font-size: 1.3em; 
+  margin: 0;  padding: 0.35em 0;
+}
+
+#instructions {
+  margin: 4em;
+}
+
+#rules {
+  font-size: 1.5em; 
+  font-weight: bold;
+}
+
+#levels{
+  margin: 0.7em;
+  text-align: center;
+}
+
+.game-level {
+  margin: 0.4em;  padding: 1em;
+  background-color: red;
+  font-size: 2em;
+  border-radius: 20%;
+}
+
+#board {
+  position: relative;
+  border: .1em solid black;
+  width: 30em;  height: 30em;
+  margin: 2em auto;
+}
+
+.box {
+  float: left;
+  display: inline-block;
+  border: .12em solid black;
+  margin: 0; 
+}
+
+.mine { background-color: red; }
+.shown { background-color: gray; }
+
+.box:hover, .game-level:hover {
+  background-color: purple;
+  opacity: .7;
+}
