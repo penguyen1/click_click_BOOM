@@ -13,7 +13,6 @@ function Board(){
   this.board;               // holds array of Box objects
   this.level;               // stores game board dimension (easy:5 med:10 hard:15)
   this.player;              // determines 1 or 2 players
-  var $cell;
   var that = this;          // stores the 'this' into context!!
 
   // START A NEW GAME
@@ -33,8 +32,8 @@ function Board(){
       var box = new Box();                      // creates a new Box object
       this.board.push(box);                     // adds new Box object to board array
       
-      $cell = $('<div>');                       // creates a new <div> tag
-      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text(this.board[i].check);    // <div class="boxes" id="i+1">
+      var $cell = $('<div>');                   // creates a new <div> tag
+      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text('');    // <div class="boxes" id="i+1">
       $board.append($cell);                     // adds to HTML $board 
     }
     
@@ -51,25 +50,18 @@ function Board(){
   // waits for a click and continues game
   this.play = function(event){
     $boxNum = parseInt($(event.target).attr('id'));
-        that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
+        that.checkBox($boxNum,0);           // use 'THAT' !!
         if(that.checkWin()){ that.gameOver(); } 
   };
 
   // checks + displays box & its neighboring boxes ( RECURSION )
   this.checkBox = function(box, depth){    
-    if(depth<1){
-      this.player = (this.player==='') ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A');
-      $('#info').text(this.player);
-    }  
-    console.log('player: '+ this.player);
-    console.log('\nGame Over? '+ that.checkWin());
-
     var numOfMines = that.countMines(box);                      // gets # of mines around box input 
     var neighbors = that.checkAround(box);                      // gets array of neighboring boxes 
-    
-    console.log('Checking box '+box+' at depth '+depth);        // testing --- WORKS @2:20pm today
-    console.log('Box'+box+' has '+numOfMines+' mines nearby');
-    console.log('Neighbors of Box'+box+': '+neighbors); 
+    // if(depth<1){
+    //   this.player = (this.player==='') ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A');
+    //   $('#info').text(this.player);
+    // }  
 
     // first, is this a mine ??
     if(depth<1 && this.board[box-1].mine) { that.gameOver(); } // first click & its a mine - GAME OVER
@@ -80,12 +72,14 @@ function Board(){
     
     // ok, its NOT a mine. now what?
     this.board[box-1].show();                             // display it
-    var checked = this.board[box-1].check;
-    $('#'+(box)).addClass('shown').text(checked);         // add class 'shown' & display mine count
+    // var checked = this.board[box-1].check;
+    $('#'+(box)).addClass('shown').text(numOfMines);      // add class 'shown' & display mine count
     if(depth<1){
       for(var i=0; i<neighbors.length; i++){
         that.checkBox(neighbors[i], 1);                   // call itself with neighbor box (RECURSION!!)
-      } 
+      }
+      this.player = (this.player==='') ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A');
+      $('#info').text(this.player); 
     }   return;
   };
 
@@ -140,9 +134,10 @@ function Board(){
   // displays Game Over message
   this.gameOver = function(){
     console.log('It is still '+this.player);
-    var last = (this.player==='') ? 'You' : (this.player==='Player A' ? 'Player A' : 'Player B');
+    var current = this.player==='' ? 'You' : this.player;
+    this.player = (this.player==='') ? 'You' : (this.player==='Player A' ? 'Player B' : 'Player A');
     console.log('Last player is: ');
-    alert(!that.checkWin() ? 'GAME OVER! '+last+' lost!' : (this.player==='' ? 'Congrats! You win!' : last+' wins!')); 
+    alert(!that.checkWin() ? 'GAME OVER! '+current+' lost!' : (this.player==='You' ? 'Congrats! You win!' : this.player+' wins!')); 
     // display all mine boxes with an img
     // how do you kill this game ???
   };      
