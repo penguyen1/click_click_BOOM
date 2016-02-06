@@ -150,7 +150,10 @@ $(document).ready(function(){
       var ccb = new Board();
       ccb.startGame($level);
 
+<<<<<<< HEAD
       
+=======
+>>>>>>> master
 
       console.log('Here\'s all the div boxes: '+ccb.board.length);
       // do{
