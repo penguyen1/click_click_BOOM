@@ -43,23 +43,20 @@ function Board(){
 
   // waits for a click action and continues game
   this.play = function(event){
-    var $div = $('.box');
-    console.log('div: '+$div.length);
-    for(var i=0; i<$div.length; i++){
-      $div.eq(i).click(function(event){
+    // var $div = $('.box');
+    // console.log('div: '+$div.length);      // what's div length?
+    // for(var i=0; i<$div.length; i++){
+      // $div.eq(i).click(function(event){
+      //   event.stopPropagation();
         $boxNum = parseInt($(event.target).attr('id'));
-        console.log('\nYou clicked Box '+$boxNum);
-        // that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
-      });
-    }
-
-       // var $box = $('.box'); 
-    // $box.each(function(i){
-    //   $box.eq(i).on('click', function() {
-    //     console.log('clicking');
-    //   })
-    // });
-    
+        // console.log('\nYou clicked Box '+$boxNum);
+        // console.log('Did you win? '+ that.checkWin());
+        that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
+        // return;
+      // });
+    // }
+    event.stopPropagation();
+    return;
   };
 
   // checks + displays box & its neighboring boxes ( RECURSION )
@@ -126,16 +123,16 @@ function Board(){
   // check if all boxes are shown (default hidden: false)
   this.checkWin = function(){                                   // how would this work with 2 players?               
     // var notMines = [];
-
+    var win = true;
     // // array of NON-MINES 
     // for(var i=0; i<this.board.length; i++){                                   // DRY THIS!
     //   if(this.board[i].mine === false){ notMines.push(this.board[i]); }
     // }
     // determines if player Won 
     for(var x=0; x<this.board.length; x++){
-      if(this.board[x].check === false){ return false; }        // LOSE: if any box is STILL hidden              -- DRY this
+      if(this.board[x].check === false){ win = false; }        // LOSE: if any box is STILL hidden              -- DRY this
     } 
-    return true;                                            // WIN: ALL non-mines are not hidden
+    return win;                                            // WIN: ALL non-mines are not hidden
   };
 
   // displays Game Over message
@@ -159,8 +156,24 @@ $(document).ready(function(){
       $('.container').append($('<div id="board">'));     // add new gameBoard to HTML
       var ccb = new Board();
       ccb.startGame($level);
-      ccb.play();
+      // ccb.play();
 
+
+
+      $('.box').each(function(i){
+        var $box = $('.box').eq(i);
+        $box.on('click', function(event){
+          // console.log('test');
+          // $boxNum = parseInt($(event.target).attr('id'));
+          // console.log('\nYou clicked Box '+$boxNum);
+          // console.log(ccb.checkWin());
+          ccb.play(event);
+          event.stopPropagation();
+        });
+      });
+
+      
+      // event.stopPropagation();
       // while(!ccb.checkWin()){
       //   ccb.play();
       // }
@@ -168,19 +181,10 @@ $(document).ready(function(){
       // ccb.gameOver();
     });  
 
-
-    // var $box = $('.box'); 
-    // $box.each(function(i){
-    //   $box.eq(i).on('click', function() {
-    //     console.log('clicking');
-    //   })
-    // });
-    
-
-
     // $('.box').each(function(i){
     //   var $box = $('.box').eq(i);
     //   $box.on('click', function(event){
+    //     event.stopPropagation();
     //     console.log('test');
     //     // $boxNum = parseInt($(event.target).attr('id'));
     //     // console.log('\nYou clicked Box '+$boxNum);
