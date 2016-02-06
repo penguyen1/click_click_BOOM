@@ -39,16 +39,20 @@ p {
   font-weight: bold;
 }
 
-#levels {
+#levels, #players {
   margin: 0.7em;
   text-align: center;
 }
 
-.game-level {
+.game-level, .players {
   margin: 0.4em;  padding: 1em;
   background-color: red;
   font-size: 2em;
   border-radius: 20%;
+}
+
+.players:focus, .game-level:focus {
+  background-color: blue;
 }
 
 #board {
@@ -68,7 +72,7 @@ p {
 .mine { background-color: red; }
 .shown { background-color: gray; }
 
-.box:hover, .game-level:hover {
+.box:hover, .game-level:hover, .players:hover {
   background-color: purple;
   opacity: .7;
 }
