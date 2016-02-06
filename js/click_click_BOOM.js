@@ -35,7 +35,7 @@ function Board(){
       do{                                   // ensures no repetitive random numbers
         var random = Math.floor(Math.random()*Math.pow(level,2));     // 0-24
       } while (this.board[random].mine);
-      console.log('random: '+random);
+      // console.log('random: '+random);
       this.board[random].isMine();          // Box object is now a mine
       $('#'+(random+1)).addClass('mine');   // addClass('mine'); to all mine boxes
     }
@@ -43,15 +43,23 @@ function Board(){
 
   // waits for a click action and continues game
   this.play = function(event){
-    console.log('hi');
     var $div = $('.box');
+    console.log('div: '+$div.length);
     for(var i=0; i<$div.length; i++){
-      $div.eq(i).on('click',function(event){
+      $div.eq(i).click(function(event){
         $boxNum = parseInt($(event.target).attr('id'));
-        // console.log('\nYou clicked Box '+$boxNum);
+        console.log('\nYou clicked Box '+$boxNum);
         // that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
       });
     }
+
+       // var $box = $('.box'); 
+    // $box.each(function(i){
+    //   $box.eq(i).on('click', function() {
+    //     console.log('clicking');
+    //   })
+    // });
+    
   };
 
   // checks + displays box & its neighboring boxes ( RECURSION )
