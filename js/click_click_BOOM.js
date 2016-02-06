@@ -22,12 +22,13 @@ function Board(){
     var mines = (Math.pow(level,2))/5;          // 20% of total area of boxes
     var size = ((30/level)-.125)+"em";
     $board = $('#board');
+
     for(var i=0; i<Math.pow(level,2); i++){
       var box = new Box();                      // creates a new Box object
       this.board.push(box);                     // adds new Box object to board array
       
       $cell = $('<div>');                   // creates a new <div> tag
-      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text('');    // <div class="boxes" id="i+1">
+      $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text(this.board[i].check);    // <div class="boxes" id="i+1">
       $board.append($cell);                     // adds to HTML $board 
     }
     
@@ -42,25 +43,30 @@ function Board(){
   };
 
   // waits for a click action and continues game
-  this.play = function(event){
+  this.play = function(event){                        // put this into game object literal???
     // var $div = $('.box');
     // console.log('div: '+$div.length);      // what's div length?
     // for(var i=0; i<$div.length; i++){
       // $div.eq(i).click(function(event){
       //   event.stopPropagation();
         $boxNum = parseInt($(event.target).attr('id'));
+
+        
+
         // console.log('\nYou clicked Box '+$boxNum);
         // console.log('Did you win? '+ that.checkWin());
         that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
         // return;
       // });
     // }
-    event.stopPropagation();
-    return;
+    // event.stopPropagation();    //move above that.checkBox???
+    // return;
   };
 
   // checks + displays box & its neighboring boxes ( RECURSION )
-  this.checkBox = function(box, depth){           
+  this.checkBox = function(box, depth){       
+    console.log('\nGame Over? '+ that.checkWin());
+    if(that.checkWin()){ that.gameOver(); }  
     var numOfMines = that.countMines(box);                      // gets # of mines around box input 
     var neighbors = that.checkAround(box);                      // gets array of neighboring boxes 
     
@@ -77,7 +83,8 @@ function Board(){
     
     // ok, its NOT a mine. now what?
     this.board[box-1].show();                             // display it
-    $('#'+(box)).addClass('shown').text(numOfMines);      // add class 'shown' & display mine count
+    var checked = this.board[box-1].check;
+    $('#'+(box)).addClass('shown').text(checked);      // add class 'shown' & display mine count
     if(depth<1){
       for(var i=0; i<neighbors.length; i++){
         that.checkBox(neighbors[i], 1);                   // call itself with neighbor box (RECURSION!!)
@@ -122,15 +129,22 @@ function Board(){
 
   // check if all boxes are shown (default hidden: false)
   this.checkWin = function(){                                   // how would this work with 2 players?               
-    // var notMines = [];
+    var notMines = [];
+    console.log('checking if game is over');
     var win = true;
+
     // // array of NON-MINES 
     // for(var i=0; i<this.board.length; i++){                                   // DRY THIS!
     //   if(this.board[i].mine === false){ notMines.push(this.board[i]); }
     // }
+    // console.log('not mines: '+notMines.length);
+
     // determines if player Won 
     for(var x=0; x<this.board.length; x++){
-      if(this.board[x].check === false){ win = false; }        // LOSE: if any box is STILL hidden              -- DRY this
+      if(this.board[x].mine === false && this.board[x].check === false){ 
+        win = false; 
+      }        // LOSE: if any box is STILL hidden              -- DRY this
+      //console.log('checking box'+(x+1)+' win: '+win);
     } 
     return win;                                            // WIN: ALL non-mines are not hidden
   };
@@ -162,16 +176,21 @@ $(document).ready(function(){
 
       $('.box').each(function(i){
         var $box = $('.box').eq(i);
-        $box.on('click', function(event){
-          // console.log('test');
-          // $boxNum = parseInt($(event.target).attr('id'));
-          // console.log('\nYou clicked Box '+$boxNum);
-          // console.log(ccb.checkWin());
-          ccb.play(event);
-          event.stopPropagation();
-        });
+        // $box.on('click', function(event){
+        //   // console.log('test');
+        //   // $boxNum = parseInt($(event.target).attr('id'));
+        //   // console.log('\nYou clicked Box '+$boxNum);
+        //   // console.log(ccb.checkWin());
+        //   ccb.play(event);
+        //   event.stopPropagation();
+        // });
+
+        $box.on('click', ccb.play);
       });
 
+      // ccb.checkWin();
+
+      
       
       // event.stopPropagation();
       // while(!ccb.checkWin()){
