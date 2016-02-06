@@ -25,12 +25,21 @@ p {
   margin: 4em;
 }
 
+.help {
+  text-align: center;
+}
+
+#help {
+  padding: 1em;
+  margin: 1em 0 -1em 0;
+}
+
 #rules {
   font-size: 1.5em; 
   font-weight: bold;
 }
 
-#levels{
+#levels {
   margin: 0.7em;
   text-align: center;
 }
