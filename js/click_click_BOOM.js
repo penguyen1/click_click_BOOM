@@ -55,7 +55,12 @@ function Board(){
 
         // console.log('\nYou clicked Box '+$boxNum);
         // console.log('Did you win? '+ that.checkWin());
+        if(that.checkWin()){ that.gameOver(); } 
         that.checkBox($boxNum,0);           // ERRRRORRRRRR -- used 'that'
+        // $(event.target).off('click');
+
+
+
         // return;
       // });
     // }
@@ -66,7 +71,7 @@ function Board(){
   // checks + displays box & its neighboring boxes ( RECURSION )
   this.checkBox = function(box, depth){       
     console.log('\nGame Over? '+ that.checkWin());
-    if(that.checkWin()){ that.gameOver(); }  
+    // if(that.checkWin()){ that.gameOver(); }  
     var numOfMines = that.countMines(box);                      // gets # of mines around box input 
     var neighbors = that.checkAround(box);                      // gets array of neighboring boxes 
     
