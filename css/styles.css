@@ -95,7 +95,7 @@ p {
 #board {
   position: relative;
   border: .1em solid white;
-  width: 32em;  height: 30em;
+  width: 34em;  height: 30em;
   margin: 4em auto;
   text-align: center;
   color: black;
