@@ -2,12 +2,6 @@
   margin: 3em auto;
 }
 
-<<<<<<< HEAD
-h1 {
-  font-size: 2em;
-  text-align: center;
-  margin: 0;
-=======
 #click {
   font-style: italic;
   font-weight: bold;
@@ -28,38 +22,15 @@ img {
   color: red;
   margin: 0;
   height: 12em;
->>>>>>> development
 }
 
 span {
   color: red;
-<<<<<<< HEAD
-  font-size: 3em;
-=======
   font-size: 1.3em;
->>>>>>> development
 }
 
 p {
   text-align: center;
-<<<<<<< HEAD
-  background-color: green;
-  list-style: none;
-  font-size: 1.3em; 
-  margin: 0;  padding: 0.35em 0;
-}
-
-#instructions {
-  margin: 4em 44em;
-}
-
-#rules {
-  font-size: 1.5em; 
-  font-weight: bold;
-}
-
-#levels{
-=======
   background-color: transparent;
   color: black;
   list-style: none;
@@ -103,18 +74,10 @@ p {
 #levels, #players {
   position: relative;
   top: 2.5em;
->>>>>>> development
   margin: 0.7em;
   text-align: center;
 }
 
-<<<<<<< HEAD
-.game-level {
-  margin: 0.4em;  padding: 1em;
-  background-color: red;
-  font-size: 2em;
-  border-radius: 20%;
-=======
 .game-level, .players {
   margin: 0.25em;  padding: .6em;
   background-color: red;
@@ -127,35 +90,21 @@ p {
 
 .players:focus, .game-level:focus {
   background-color: blue;
->>>>>>> development
 }
 
 #board {
   position: relative;
   border: .1em solid black;
   width: 30em;  height: 30em;
-<<<<<<< HEAD
-  margin: 2em auto;
-=======
   margin: 4em auto;
   text-align: center;
   color: black;
   background-color: transparent;
->>>>>>> development
 }
 
 .box {
   float: left;
   display: inline-block;
-<<<<<<< HEAD
-  border: .12em solid black;
-  margin: 0; 
-}
-
-.box:hover, .game-level:hover {
-  background-color: purple;
-  opacity: .7;
-=======
   border: .12em outset gray;
   line-height: 2.5em;
   margin: 0; 
@@ -185,5 +134,4 @@ p {
   position: relative;
   width: 20em;  height: 5em;
   margin: 2em auto;
->>>>>>> development
 }
