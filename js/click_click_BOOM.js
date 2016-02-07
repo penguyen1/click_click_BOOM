@@ -45,7 +45,7 @@ function Board(){
       } while (this.board[random].mine);
       this.board[random].isMine();          // Box object is now a mine
       $('#'+(random+1)).addClass('mine').click(function(){
-        $('#board').hide('explode', {pieces: 120}, 3000);
+        $('#board').hide('explode', {pieces: 130}, 3000);
       });   // addClass('mine'); to all mine boxes
     }
   };

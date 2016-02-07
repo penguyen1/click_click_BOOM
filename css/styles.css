@@ -4,6 +4,7 @@
 
 #click {
   font-style: italic;
+  font-weight: bold;
   font-size: 3em;
   position: relative;
   top: -3.7em; left: 1em;
@@ -33,7 +34,7 @@ p {
   background-color: transparent;
   color: black;
   list-style: none;
-  font-size: 1.6em; 
+  font-size: 1.4em; 
   margin: 0;  padding: 0.35em 0;
 }
 
@@ -63,7 +64,7 @@ p {
 }
 
 #rules {
-  font-size: 1.5em; 
+  font-size: 1.6em; 
   font-weight: bold;
 }
 
