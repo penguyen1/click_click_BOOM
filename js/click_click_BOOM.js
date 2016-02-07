@@ -23,9 +23,10 @@ function Board(){
     var mines = (Math.pow(level,2))/5;          // 20% of total area of boxes
     var size = ((30/level)-.125)+"em";          // size of each <div> on game board
     var $help = $('<div>').addClass('help');
-    $help.append($('<button>').attr('id', 'help').text('Instructions')).append('<span id="info">');
-    $('h1').after($help);
-    $('#info').text(this.player);
+    $help.append($('<div>').attr('id', 'info').text(this.player));
+    $help.append($('<button>').attr('id', 'help').text('Forgot the rules?'));
+    $('#top').after($help);
+    // $('#info');
     $board = $('#board');
 
     for(var i=0; i<Math.pow(level,2); i++){
@@ -43,7 +44,9 @@ function Board(){
         var random = Math.floor(Math.random()*Math.pow(level,2));     
       } while (this.board[random].mine);
       this.board[random].isMine();          // Box object is now a mine
-      $('#'+(random+1)).addClass('mine');   // addClass('mine'); to all mine boxes
+      $('#'+(random+1)).addClass('mine').click(function(){
+        $('#board').hide('explode', {pieces: 120}, 3000);
+      });   // addClass('mine'); to all mine boxes
     }
   };
 
@@ -58,10 +61,6 @@ function Board(){
   this.checkBox = function(box, depth){    
     var numOfMines = that.countMines(box);                      // gets # of mines around box input 
     var neighbors = that.checkAround(box);                      // gets array of neighboring boxes 
-    // if(depth<1){
-    //   this.player = (this.player==='') ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A');
-    //   $('#info').text(this.player);
-    // }  
 
     // first, is this a mine ??
     if(depth<1 && this.board[box-1].mine) { that.gameOver(); } // first click & its a mine - GAME OVER
@@ -78,7 +77,9 @@ function Board(){
       for(var i=0; i<neighbors.length; i++){
         that.checkBox(neighbors[i], 1);                   // call itself with neighbor box (RECURSION!!)
       }
-      this.player = (this.player==='') ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A');
+      console.log('player: '+this.player);
+      this.player = (this.player === '' ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A'));
+      // debugger;
       $('#info').text(this.player); 
     }   return;
   };
@@ -133,13 +134,16 @@ function Board(){
 
   // displays Game Over message
   this.gameOver = function(){
-    console.log('It is still '+this.player);
-    var current = this.player==='' ? 'You' : this.player;
-    this.player = (this.player==='') ? 'You' : (this.player==='Player A' ? 'Player B' : 'Player A');
-    console.log('Last player is: ');
-    alert(!that.checkWin() ? 'GAME OVER! '+current+' lost!' : (this.player==='You' ? 'Congrats! You win!' : this.player+' wins!')); 
-    // display all mine boxes with an img
-    // how do you kill this game ???
+    var $gameOver = $('<div>').attr('id', 'gg');
+    $('#board').hide();                     // clears all boxes on game board 
+    $('.help').hide();
+
+    var current = (this.player==='') ? 'You' : this.player;
+    this.player = this.player ==='You' ? 'You': (this.player==='Player A' ? 'Player B' : 'Player A');
+    var result = !that.checkWin() ? 'GAME OVER! '+current+' lost!' : (current==='You' ? 'CONGRATS!! You win!' : this.player+' wins!'); 
+    
+    $gameOver.text(result).fadeIn(3000);
+    $('#top').after($gameOver);
   };      
 };
 
@@ -157,9 +161,9 @@ $(document).ready(function(){
       
       $('#players').remove();                             // removes 1 & 2 player buttons
       $('#levels').remove();                              // removes easy|medium|hard buttons
-      $('.container').append($('<div id="board">'));      // add new gameBoard to HTML
+      var $board = $('<div id="board">').fadeIn(2000);
+      $('.container').append($board);      // add new gameBoard to HTML
       var ccb = new Board();
-      // console.log('players: '+$players);
       ccb.startGame($level, $players);
 
       $('.box').each(function(i){                         // adds clickEventListener to each <div>
