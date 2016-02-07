@@ -17,25 +17,24 @@ function Board(){
 
   // START A NEW GAME
   this.startGame = function(level, players){   
-    this.board = [];                            // empties game board
-    this.level = level;                         // stores game dimension value
-    this.player = players>1 ? 'Player A' : '';  // determines 1 or 2 players
+    this.board = [];                            
+    this.level = level;                         
+    this.player = players>1 ? 'Player A' : '';  
     var mines = (Math.pow(level,2))/5;          // 20% of total area of boxes
     var size = ((30/level)-.125)+"em";          // size of each <div> on game board
     var $help = $('<div>').addClass('help');
-    $help.append($('<div>').attr('id', 'info').text(this.player));
     $help.append($('<button>').attr('id', 'help').text('Forgot the rules?'));
     $('#top').after($help);
-    // $('#info');
+    $help.after($('<div>').attr('id', 'info').text(this.player));
     $board = $('#board');
 
     for(var i=0; i<Math.pow(level,2); i++){
-      var box = new Box();                      // creates a new Box object
+      var box = new Box();                      // new Box object
       this.board.push(box);                     // adds new Box object to board array
       
-      var $cell = $('<div>');                   // creates a new <div> tag
+      var $cell = $('<div>');                   
       $cell.addClass('box').attr('id', i+1).css({"width":size,"height":size}).text('');    // <div class="boxes" id="i+1">
-      $board.append($cell);                     // adds to HTML $board 
+      $board.append($cell);                    
     }
     
     // randomly selects & sets mines on game board
@@ -52,9 +51,9 @@ function Board(){
 
   // waits for a click and continues game
   this.play = function(event){
-    $boxNum = parseInt($(event.target).attr('id'));
-        that.checkBox($boxNum,0);           // use 'THAT' !!
-        if(that.checkWin()){ that.gameOver(); } 
+    $boxNum = parseInt($(event.target).attr('id'));   // gets target id value
+    that.checkBox($boxNum,0);                         // use 'THAT' !!
+    if(that.checkWin()){ that.gameOver(); }           // checks for winner
   };
 
   // checks + displays box & its neighboring boxes ( RECURSION )
@@ -70,16 +69,14 @@ function Board(){
     } 
     
     // ok, its NOT a mine. now what?
-    this.board[box-1].show();                             // display it
-    // var checked = this.board[box-1].check;
+    this.board[box-1].show();                             
     $('#'+(box)).addClass('shown').text(numOfMines);      // add class 'shown' & display mine count
     if(depth<1){
       for(var i=0; i<neighbors.length; i++){
         that.checkBox(neighbors[i], 1);                   // call itself with neighbor box (RECURSION!!)
       }
-      console.log('player: '+this.player);
+      // console.log('player: '+this.player);
       this.player = (this.player === '' ? '' : (this.player === 'Player A' ? 'Player B' : 'Player A'));
-      // debugger;
       $('#info').text(this.player); 
     }   return;
   };
@@ -117,10 +114,11 @@ function Board(){
     for(var i=0; i<neighbors.length; i++){   
       var current = neighbors[i];
       if(this.board[current-1].mine){ total_mines+= 1; }    // Its a mine!
-    } return total_mines;
+    } 
+    return total_mines;
   };
 
-  // check if all boxes are shown (default hidden: false)
+  // check if all boxes are shown
   this.checkWin = function(){                              
     var win = true;
 
@@ -137,7 +135,7 @@ function Board(){
     var $gameOver = $('<div>').attr('id', 'gg');
     $('#board').hide();                     // clears all boxes on game board 
     $('.help').hide();
-
+    $('#info').hide();
     var current = (this.player==='') ? 'You' : this.player;
     this.player = this.player ==='You' ? 'You': (this.player==='Player A' ? 'Player B' : 'Player A');
     var result = !that.checkWin() ? 'GAME OVER! '+current+' lost!' : (current==='You' ? 'CONGRATS!! You win!' : this.player+' wins!'); 
@@ -148,35 +146,35 @@ function Board(){
 };
 
 $(document).ready(function(){
-    console.log('lock and loaded');
     var $level, $players, $boxNum;              // $level=game-level $boxNum=clicked div id#
     $('#instructions').hide();                  // hides instructions
 
-    $('.players').click(function(event){
+    $('.players').click(function(event){        // 1 or 2 players
       $players = $(event.target).attr('id');
-     });  // players
+     });  
 
     $('.game-level').click(function(event){
-      $level = $(event.target).attr('id');                // grabs id of easy|medium|hard
+      $level = $(event.target).attr('id');      // gets value of easy|medium|hard
       
-      $('#players').remove();                             // removes 1 & 2 player buttons
-      $('#levels').remove();                              // removes easy|medium|hard buttons
+      $('#players').remove();                   // removes 1 & 2 player buttons
+      $('#levels').remove();                    // removes easy|medium|hard buttons
       var $board = $('<div id="board">').fadeIn(2000);
-      $('.container').append($board);      // add new gameBoard to HTML
+      $('.container').append($board);           // add new gameBoard to HTML
       var ccb = new Board();
       ccb.startGame($level, $players);
 
-      $('.box').each(function(i){                         // adds clickEventListener to each <div>
+      $('.box').each(function(i){               // adds clickEventListener to each box
         var $box = $('.box').eq(i);
         $box.on('click', ccb.play);
       });
 
-      $('#help').click(function(){                        // toggles instruction button
+      $('#help').click(function(){              // toggles instruction button
         $('#instructions').toggle(1000);
       });
     });   // game-level 
 
-});       // document.ready
-    
+}); // document.ready
+
+
 
 

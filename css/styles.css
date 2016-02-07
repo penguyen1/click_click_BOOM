@@ -38,18 +38,21 @@ p {
   margin: 0;  padding: 0.35em 0;
 }
 
-#instructions {
+#instructions { 
   margin: 4em;
+  padding-top: 3em;
 }
 
-.help {
-  text-align: center;
-}
+.help { text-align: center; }
 
 #info {
-  margin-left: -26em;
-  color: black;
+  text-align: center;
+  margin-left: -11em;
+  margin-top: 1em;
+  margin-bottom: -1em;
+  color: blue;
   font-weight: bold;
+  font-size: 2em;
   vertical-align: middle;
 }
 
@@ -93,7 +96,7 @@ p {
   position: relative;
   border: .1em solid black;
   width: 30em;  height: 30em;
-  margin: 2em auto;
+  margin: 4em auto;
   text-align: center;
   color: black;
   background-color: transparent;
@@ -109,7 +112,7 @@ p {
   opacity: .8;
 }
 
-.mine { background-color: red; }                /*delete this */
+.mine { background-color: navy; }                /* reveals all mines on game board */
 .shown { 
   background-color: transparent; 
   font-weight: bold;
@@ -128,7 +131,6 @@ p {
   font-size: 4em;
   font-weight: bold;
   color: red;
-
   position: relative;
   width: 20em;  height: 5em;
   margin: 2em auto;
