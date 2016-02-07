@@ -136,6 +136,7 @@ function Board(){
     $('#board').hide();                     // clears all boxes on game board 
     $('.help').hide();
     $('#info').hide();
+    $('#instructions').hide();
     var current = (this.player==='') ? 'You' : this.player;
     this.player = this.player ==='You' ? 'You': (this.player==='Player A' ? 'Player B' : 'Player A');
     var result = !that.checkWin() ? 'GAME OVER! '+current+' lost!' : (current==='You' ? 'CONGRATS!! You win!' : this.player+' wins!'); 
