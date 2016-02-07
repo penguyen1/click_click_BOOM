@@ -2,61 +2,136 @@
   margin: 3em auto;
 }
 
-h1 {
-  font-size: 2em;
+#click {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 3em;
+  position: relative;
+  top: -3.7em; left: 1em;
+  color: black;
+}
+
+img {
+  position: relative;
+  width: 21em; height: 21em;
+  top: -3em; left: 4em;
+}
+
+#top {
   text-align: center;
+  color: red;
   margin: 0;
+  height: 12em;
 }
 
 span {
   color: red;
-  font-size: 3em;
+  font-size: 1.3em;
 }
 
 p {
   text-align: center;
-  background-color: green;
+  background-color: transparent;
+  color: black;
   list-style: none;
-  font-size: 1.3em; 
+  font-size: 1.4em; 
   margin: 0;  padding: 0.35em 0;
 }
 
-#instructions {
-  margin: 4em 44em;
+#instructions { 
+  margin: 4em;
+  padding-top: 3em;
+}
+
+.help { text-align: center; }
+
+#info {
+  text-align: center;
+  margin-left: -11em;
+  margin-top: 1em;
+  margin-bottom: -1em;
+  color: blue;
+  font-weight: bold;
+  font-size: 2em;
+  vertical-align: middle;
+}
+
+#help {
+  padding: .4em;
+  margin: 0.6em 0 -1.8em -12em;
+  background-color: red;
+  color: white;
+  font-size: 1.1em;
+  border-radius: 5%;
+  opacity: .7;
 }
 
 #rules {
-  font-size: 1.5em; 
+  font-size: 1.6em; 
   font-weight: bold;
 }
 
-#levels{
+#levels, #players {
+  position: relative;
+  top: 2.5em;
   margin: 0.7em;
   text-align: center;
 }
 
-.game-level {
-  margin: 0.4em;  padding: 1em;
+.game-level, .players {
+  margin: 0.25em;  padding: .6em;
   background-color: red;
   font-size: 2em;
-  border-radius: 20%;
+  border-radius: 15%;
+  opacity: .7;
+  color: white;
+  font-family: verdana;
+}
+
+.players:focus, .game-level:focus {
+  background-color: blue;
 }
 
 #board {
   position: relative;
   border: .1em solid black;
   width: 30em;  height: 30em;
-  margin: 2em auto;
+  margin: 4em auto;
+  text-align: center;
+  color: black;
+  background-color: transparent;
 }
 
 .box {
   float: left;
   display: inline-block;
-  border: .12em solid black;
+  border: .12em outset gray;
+  line-height: 2.5em;
   margin: 0; 
+  background-color: navy;
+  opacity: .8;
 }
 
-.box:hover, .game-level:hover {
-  background-color: purple;
-  opacity: .7;
+.mine { background-color: navy; }                /* reveals all mines on game board */
+.shown { 
+  background-color: transparent; 
+  font-weight: bold;
+  color: black;
+  border: .12em inset gray;
+}
+
+.box:hover, .game-level:hover, .players:hover, #help:hover {
+  background-color: blue;
+  opacity: .8;
+  font-style: italic;
+}
+
+#gg {
+  text-align: center;
+  font-size: 4em;
+  font-weight: bold;
+  color: red;
+  position: relative;
+  width: 20em;  height: 5em;
+  margin: 2em auto;
 }
