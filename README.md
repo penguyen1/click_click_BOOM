@@ -1,5 +1,6 @@
 # click_click_BOOM
 
+[Play it here!](http://penguyen1.github.io/click_click_BOOM/)
 
 **click_click_BOOM** operates like the classical game: **Minesweeper.** Based on the level of difficulty of your choosing, you will be presented a minefield filled with empty boxes and explosive bombs! You must strategically & logically locate and avoid all the scattered explosives that are planted within the minefield using nothing but your **gut instincts** and provided number indicators. 
 
